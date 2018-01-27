@@ -8,9 +8,13 @@ import datetime as dt
 from pytrends.request import TrendReq
 from datetime import datetime, timedelta
 import itertools
+import smtplib
+import imghdr
+from email.message import EmailMessage
 
-# INPUT PARAMETERS
-##################
+####################
+# INPUT PARAMETERS #
+####################
 # start month and end month:
 month_start = -12
 month_end = -0
@@ -23,9 +27,10 @@ currency = 'bitcoin'
 #currency = 'stellar'
 #currency = 'raiblocks'
 ##################
+####################
 
 ##################
-# 1: PREPARTAION #
+# 1: PREPARATION #
 ##################
 
 # for https://pythonprogramming.net/advanced-matplotlib-graphing-charting-tutorial/
@@ -231,9 +236,54 @@ ax.plot(dates_dt[2],prices_array[2][:]/max_prices[2]*100,c='blue',linewidth=3,la
 plt.grid(True,linestyle='dotted')
 plt.tight_layout()
 
+now = arrow.utcnow().format('YYYY-MM-DD_HH:mm:ss')
 leg = ax.legend(loc='upper center', shadow=True)
 leg_lines = leg.get_lines()
 leg_texts = leg.get_texts()
 plt.setp(leg_lines, linewidth=4)
 plt.setp(leg_texts, fontsize='x-large')
-plt.show()
+#plt.show()
+filename = 'CryptoTrends_'+now+'.png'
+plt.savefig(filename)
+print('    Saved file in "{}"'.format(filename))
+
+##################
+# 5: SEND EMAIL  #
+##################
+# (from https://docs.python.org/3/library/email.examples.html)
+
+print('')
+print('sending email')
+
+# set up email addresses
+exec(open("./email_data").read())
+
+# current date
+now = arrow.utcnow().format('YYYY-MM-DD (HH:mm:ss UTC)')
+subject = 'CryptoTrends '+now
+
+# Create the container email message.
+msg = EmailMessage()
+msg['Subject'] = subject
+# me == the sender's email address
+# family = the list of all recipients' email addresses
+msg['From'] = notifier_email
+msg['To'] = ', '.join(receiver_email)
+msg.preamble = subject
+
+# Open the files in binary mode.  Use imghdr to figure out the
+# MIME subtype for each specific image.
+with open(filename, 'rb') as fp:
+    img_data = fp.read()
+msg.add_attachment(img_data, maintype='image',
+                             subtype=imghdr.what(None, img_data))
+
+# Send the email via Gmail
+s = smtplib.SMTP('smtp.gmail.com', 587)
+s.starttls()
+s.login(notifier_email, password)
+s.send_message(msg)
+
+print('    Sent image to')
+for i in range(0,len(receiver_email)):
+    print('        '+receiver_email[i])
