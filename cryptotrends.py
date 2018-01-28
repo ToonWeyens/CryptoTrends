@@ -225,6 +225,7 @@ for i in range(0,3):
     dates_dt.append([dt.datetime.fromtimestamp(date) for date in dates_array[i]])
 
 fig, ax = plt.subplots()
+fig.set_size_inches(18.5, 10.5)
 ax.set_ylim([0,100])
 plt.xticks( rotation=25 )
 plt.subplots_adjust(bottom=0.2)
