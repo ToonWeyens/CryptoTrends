@@ -7,16 +7,15 @@ import arrow
 import datetime as dt
 from pytrends.request import TrendReq
 from datetime import datetime, timedelta
-import itertools
 import smtplib
-import imghdr
-from email.message import EmailMessage
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 
 ####################
 # INPUT PARAMETERS #
 ####################
 # start month and end month:
-month_start = -12
+month_start = -3
 month_end = -0
 
 # currency
@@ -264,26 +263,24 @@ now = arrow.utcnow().format('YYYY-MM-DD (HH:mm:ss UTC)')
 subject = 'CryptoTrends '+now
 
 # Create the container email message.
-msg = EmailMessage()
+# (from https://docs.python.org/3.4/library/email-examples.html, third example, 31/01/2018)
+msg = MIMEMultipart()
 msg['Subject'] = subject
-# me == the sender's email address
-# family = the list of all recipients' email addresses
 msg['From'] = notifier_email
 msg['To'] = ', '.join(receiver_email)
 msg.preamble = subject
 
-# Open the files in binary mode.  Use imghdr to figure out the
-# MIME subtype for each specific image.
 with open(filename, 'rb') as fp:
-    img_data = fp.read()
-msg.add_attachment(img_data, maintype='image',
-                             subtype=imghdr.what(None, img_data))
+    img_data = MIMEImage(fp.read())
+
+msg.attach(img_data)
 
 # Send the email via Gmail
 s = smtplib.SMTP('smtp.gmail.com', 587)
 s.starttls()
 s.login(notifier_email, password)
 s.send_message(msg)
+s.quit()
 
 print('    Sent image to')
 for i in range(0,len(receiver_email)):
