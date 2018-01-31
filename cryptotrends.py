@@ -1,6 +1,7 @@
 from lxml import html
 import requests
 import numpy as np
+import tkinter
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import arrow
