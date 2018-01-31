@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
+import os
 
 ####################
 # INPUT PARAMETERS #
@@ -20,6 +21,11 @@ from email.mime.image import MIMEImage
 month_start = -3
 month_end = -0
 
+# receiver email:
+receiver_email = ["toon.weyens@gmail.com"]
+#receiver_email.append("daanvanvugt@gmail.com")
+#receiver_email.append("switten@gmail.com")
+
 # currency
 currency = 'bitcoin'
 #currency = 'ethereum'
@@ -27,7 +33,6 @@ currency = 'bitcoin'
 #currency = 'cardano'
 #currency = 'stellar'
 #currency = 'raiblocks'
-##################
 ####################
 
 ##################
@@ -257,8 +262,9 @@ print('    Saved file in "{}"'.format(filename))
 print('')
 print('sending email')
 
-# set up email addresses
-exec(open("./email_data").read())
+# set up email addresses and password from environment
+notifier_email = os.environ['notifier_email']
+password = os.environ['password']
 
 # current date
 now = arrow.utcnow().format('YYYY-MM-DD (HH:mm:ss UTC)')
