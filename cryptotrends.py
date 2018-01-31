@@ -18,13 +18,13 @@ import os
 # INPUT PARAMETERS #
 ####################
 # start month and end month:
-month_start = -3
+month_start = -12
 month_end = -0
 
 # receiver email:
 receiver_email = ["toon.weyens@gmail.com"]
-#receiver_email.append("daanvanvugt@gmail.com")
-#receiver_email.append("switten@gmail.com")
+receiver_email.append("daanvanvugt@gmail.com")
+receiver_email.append("switten@gmail.com")
 
 # currency
 currency = 'bitcoin'
