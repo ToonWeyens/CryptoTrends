@@ -2,7 +2,6 @@ from lxml import html
 import requests
 import numpy as np
 import matplotlib.pyplot as plt
-matplotlib.use('agg')
 import matplotlib.dates as md
 import arrow
 import datetime as dt
