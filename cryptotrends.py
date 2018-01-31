@@ -263,6 +263,12 @@ print('')
 print('sending email')
 
 # set up email addresses and password from environment
+# This can be done, for example, by running a script:
+#   export notifier_email="..."
+#   export password="..."
+#   python cryptotrends.py
+# For Heroku, this could be
+#   heroku config:set notifier_email="..." password="..."
 notifier_email = os.environ['notifier_email']
 password = os.environ['password']
 
