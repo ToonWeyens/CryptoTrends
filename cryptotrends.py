@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 from lxml import html
 import requests
 import numpy as np
