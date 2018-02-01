@@ -13,6 +13,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 import os
+import sys 
 
 ####################
 # INPUT PARAMETERS #
@@ -25,15 +26,15 @@ month_end = -0
 receiver_email = ["toon.weyens@gmail.com"]
 receiver_email.append("daanvanvugt@gmail.com")
 receiver_email.append("switten@gmail.com")
-
-# currency
-currency = 'bitcoin'
-#currency = 'ethereum'
-#currency = 'ripple'
-#currency = 'cardano'
-#currency = 'stellar'
-#currency = 'raiblocks'
 ####################
+
+###########
+# 0: TEST #
+###########
+if ((len(sys.argv) < 2 or len(sys.argv) > 2)):
+    print('ERROR: need name of currency as argument')
+    sys.exit(1)
+currency = sys.argv[1]
 
 ##################
 # 1: PREPARATION #
@@ -250,7 +251,7 @@ leg_texts = leg.get_texts()
 plt.setp(leg_lines, linewidth=4)
 plt.setp(leg_texts, fontsize='x-large')
 #plt.show()
-filename = 'CryptoTrends_'+now+'.png'
+filename = 'CryptoTrends_'+currency+'_'+now+'.png'
 plt.savefig(filename)
 print('    Saved file in "{}"'.format(filename))
 
@@ -274,7 +275,7 @@ password = os.environ['password']
 
 # current date
 now = arrow.utcnow().format('YYYY-MM-DD (HH:mm:ss UTC)')
-subject = 'CryptoTrends '+now
+subject = 'CryptoTrends for '+currency+' '+now
 
 # Create the container email message.
 # (from https://docs.python.org/3.4/library/email-examples.html, third example, 31/01/2018)
